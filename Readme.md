@@ -1,21 +1,18 @@
-Perfecto 👌 Te lo ordeno bien estructurado, limpio y profesional para que lo subas directo a tu README.md en GitHub.
-
-Puedes copiar y pegar todo esto:
-
-🗄 CURSO ORACLE – COMANDOS
-📦 Gestión de Almacenamiento
+# 🗄 CURSO ORACLE – COMANDOS  
+## 📦 Gestión de Almacenamiento
 
 La gestión de almacenamiento en Oracle permite administrar el espacio donde se guardarán:
 
-Tablas
+- Tablas  
+- Índices  
+- Vistas  
+- Datos  
 
-Índices
+---
 
-Vistas
+## 📊 Estructura de almacenamiento en Oracle
 
-Datos
-
-📊 Estructura de almacenamiento en Oracle
+```
 Base de Datos (ORCL)
         ↓
    Tablespaces
@@ -23,74 +20,108 @@ Base de Datos (ORCL)
     Datafiles (.dbf)
         ↓
    Datos reales en disco
+```
 
-🏗 Analogía simple
+---
+
+## 🏗 Analogía simple
 
 Imagina un edificio:
 
-🏢 Base de datos = Edificio
+- 🏢 **Base de datos** = Edificio  
+- 🏬 **Tablespace** = Un piso  
+- 🧱 **Datafile** = El concreto del piso  
+- 🗄 **Tabla** = Una oficina dentro del piso  
 
-🏬 Tablespace = Un piso
+---
 
-🧱 Datafile = El concreto del piso
+# 📁 Tablespace
 
-🗄 Tabla = Una oficina dentro del piso
+Un **Tablespace** es un contenedor lógico de almacenamiento dentro de la base de datos.
 
-📁 Tablespace
+- No es un archivo físico.
+- Organiza dónde se guardan las tablas.
+- Permite administrar el espacio.
 
-Un Tablespace es un contenedor lógico de almacenamiento dentro de la base de datos.
+---
 
-No es un archivo físico.
+# 💾 Datafile
 
-Organiza dónde se guardan las tablas.
+Un **Datafile** es un archivo físico donde realmente se guardan los datos.
 
-Permite administrar el espacio.
+- Extensión: `.dbf`
+- Vive en el sistema operativo.
+- Contiene los bloques de datos reales.
 
-💾 Datafile
+---
 
-Un Datafile es un archivo físico donde realmente se guardan los datos.
+# 🛠 COMANDOS PRINCIPALES
 
-Extensión: .dbf
+---
 
-Vive en el sistema operativo
+## 1️⃣ Crear directorio en Linux
 
-Contiene los bloques de datos reales
-
-🛠 COMANDOS PRINCIPALES
-1️⃣ Crear directorio en Linux
+```bash
 mkdir /u02/datoscortez
-
+```
 
 Verificar:
 
+```bash
 ls /u02
+```
 
-2️⃣ Crear Tablespace
-Tablespace simple (1 datafile)
+---
+
+## 2️⃣ Crear Tablespace
+
+### Tablespace simple (1 datafile)
+
+```sql
 CREATE TABLESPACE TBS_CORTEZ 
 DATAFILE '/u02/datoscortez/df_cortez01.dbf' 
 SIZE 50M;
+```
 
-Tablespace con múltiples datafiles
+---
+
+### Tablespace con múltiples datafiles
+
+```sql
 CREATE TABLESPACE TBS_SEGURIDAD 
 DATAFILE 
 '/u02/datos/df_seg_01.dbf' SIZE 10M,
 '/u02/datos/df_seg_02.dbf' SIZE 10M;
+```
 
-3️⃣ Consultar Tablespaces
+---
+
+## 3️⃣ Consultar Tablespaces
+
+```sql
 SELECT * FROM DBA_TABLESPACES;
+```
 
-4️⃣ Consultar Datafiles
+---
+
+## 4️⃣ Consultar Datafiles
+
+```sql
 SELECT * FROM DBA_DATA_FILES;
+```
 
-5️⃣ Consulta detallada de tamaños de Datafiles
+---
+
+## 5️⃣ Consulta detallada de tamaños de Datafiles
+
+```sql
 SELECT 
     df.file_name AS datafile,
     df.tablespace_name AS tablespace,
     ts.bigfile AS is_bigfile,
-    df.bytes / 1024 / 1024 AS Tamaño_Mb,
+    df.bytes / 1024 / 1024 AS Tamano_Mb,
     df.autoextensible,
-    df.maxbytes / 1024 / 1024 / 1024 AS Tamaño_maximo_Gb,
+    df.maxbytes / 1024 / 1024 / 1024 AS Tamano_maximo_Gb,
     ts.block_size
 FROM 
     dba_data_files df
@@ -99,64 +130,82 @@ JOIN
 ON df.tablespace_name = ts.tablespace_name
 ORDER BY 
     df.tablespace_name, df.file_name;
+```
 
-6️⃣ Crear tabla dentro de un Tablespace
+---
+
+## 6️⃣ Crear tabla dentro de un Tablespace
+
+```sql
 CREATE TABLE ARTICULO 
 (
     ID INTEGER, 
     DESCRIPCION CHAR(100)
 ) 
 TABLESPACE TBS_VENTAS;
+```
 
-7️⃣ Insertar registros masivos
+---
+
+## 7️⃣ Insertar registros masivos
+
+```sql
 INSERT INTO ARTICULO
 SELECT LEVEL, 'ART_' || LEVEL
 FROM DUAL
 CONNECT BY LEVEL <= 10000;
+```
 
-8️⃣ Modificar tamaño de un Datafile
+---
+
+## 8️⃣ Modificar tamaño de un Datafile
+
+```sql
 ALTER DATABASE 
 DATAFILE '/u02/datos/df_ventas_01.dbf'
 RESIZE 10M;
+```
 
-9️⃣ Agregar un nuevo Datafile a un Tablespace
+---
+
+## 9️⃣ Agregar un nuevo Datafile a un Tablespace
+
+```sql
 ALTER TABLESPACE TBS_VENTAS
 ADD DATAFILE '/u02/datos/df_ventas_02.dbf' 
 SIZE 10M;
+```
 
-🔟 Eliminar un Tablespace (con todo su contenido)
+---
+
+## 🔟 Eliminar un Tablespace (con todo su contenido)
 
 ⚠ Esto elimina tablas y archivos físicos.
 
+```sql
 DROP TABLESPACE TBS_VENTAS
 INCLUDING CONTENTS AND DATAFILES;
+```
 
-🧠 Conceptos Clave
+---
 
-Los datafiles están divididos en bloques de datos.
+# 🧠 Conceptos Clave
 
-El tamaño por defecto suele ser 8KB.
+- Los datafiles están divididos en **bloques de datos**.
+- El tamaño por defecto suele ser **8KB**.
+- Pueden existir bloques de: 2K, 4K, 8K, 16K, 32K.
+- Para datos grandes (como BLOB, PDFs), se recomienda bloques mayores (16K o 32K).
 
-Pueden existir bloques de: 2K, 4K, 8K, 16K, 32K.
+---
 
-Para datos grandes (como BLOB, PDFs), se recomienda bloques mayores (16K o 32K).
+# 📌 Resumen Final
 
-📌 Resumen Final
-
-La base de datos contiene tablespaces.
-
-Los tablespaces contienen datafiles.
-
-Los datafiles contienen los datos reales.
-
-Las tablas pueden asignarse a un tablespace específico.
-
-Se puede:
-
-Redimensionar datafiles
-
-Agregar nuevos datafiles
-
-Consultar uso y tamaños
-
-Eliminar tablespaces
+- La base de datos contiene tablespaces.
+- Los tablespaces contienen datafiles.
+- Los datafiles contienen los datos reales.
+- Las tablas pueden asignarse a un tablespace específico.
+- Se puede:
+  - Redimensionar datafiles
+  - Agregar nuevos datafiles
+  - Consultar uso y tamaños
+  - Eliminar tablespaces
