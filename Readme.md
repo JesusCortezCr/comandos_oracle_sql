@@ -209,3 +209,97 @@ INCLUDING CONTENTS AND DATAFILES;
   - Agregar nuevos datafiles
   - Consultar uso y tamaños
   - Eliminar tablespaces
+# 🗄 CURSO ORACLE – CREACIÓN Y GESTIÓN DE TABLAS
+
+## 📌 Tabla con Primary Key Autoincremental
+
+En Oracle 12c en adelante se puede usar `GENERATED AS IDENTITY` para crear un campo autoincremental sin necesidad de sequence ni trigger.
+
+---
+
+## 🏗 Creación de Tabla
+
+```sql
+CREATE TABLE CLIENTES(
+    ID NUMBER GENERATED ALWAYS AS IDENTITY,
+    NOMBRE VARCHAR2(100) NOT NULL,
+    EMAIL VARCHAR2(150),
+    FECHA_REGISTRO DATE DEFAULT SYSDATE,
+    CONSTRAINT PK_CLIENTES PRIMARY KEY (ID)
+) TABLESPACE TBS_CORTEZ;
+```
+
+### 🔎 Explicación
+
+- `GENERATED ALWAYS AS IDENTITY` → Autoincremental automático
+- `PRIMARY KEY (ID)` → Clave primaria
+- `NOT NULL` → Campo obligatorio
+- `DEFAULT SYSDATE` → Inserta fecha actual automáticamente
+- `TABLESPACE TBS_CORTEZ` → Guarda la tabla en ese tablespace
+
+---
+
+## ➕ Insertar Datos
+
+```sql
+INSERT INTO CLIENTES (NOMBRE,EMAIL) 
+VALUES ('JESUS CORTEZ','JESUS@GMAIL.COM');
+
+COMMIT;
+```
+
+> No se coloca el ID porque Oracle lo genera automáticamente.
+
+---
+
+## 👀 Ver Datos de la Tabla
+
+```sql
+SELECT * FROM CLIENTES;
+```
+
+---
+
+## 🔎 Ver Estructura de la Tabla
+
+```sql
+DESCRIBE CLIENTES;
+```
+
+---
+
+## 🗑 Eliminar Tabla
+
+```sql
+DROP TABLE CLIENTES;
+```
+
+⚠ Esto elimina:
+- La tabla
+- Todos sus datos
+- Restricciones
+- Índices
+
+---
+
+# 📌 Resumen
+
+| Comando | Función |
+|----------|----------|
+| CREATE TABLE | Crear tabla |
+| INSERT INTO | Insertar datos |
+| COMMIT | Guardar cambios |
+| SELECT | Consultar datos |
+| DESCRIBE | Ver estructura |
+| DROP TABLE | Eliminar tabla |
+
+---
+
+🚀 Ahora ya sabes:
+
+- Crear tabla con PK autoincremental
+- Insertar datos
+- Consultar datos
+- Ver estructura
+- Eliminar tabla
+
